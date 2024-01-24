@@ -1,0 +1,66 @@
+{
+  "DefaultSearchEngine": [
+    {
+      "Name": "Bing",
+      "cmdName": "bing",
+      "url": "https://www.bing.com/search?q={0}"
+    }
+  ],
+  "UserSearchEngineList": [
+    {
+      "Name": "DuckDuckGo",
+      "cmdName": "ddg",
+      "url": "https://duckduckgo.com/?q={0}"
+    },
+    {
+      "Name": "Google",
+      "cmdName": "google",
+      "url": "https://www.google.com/search?q={0}"
+    },
+    {
+      "Name": "GitHub Repo",
+      "cmdName": "gh",
+      "url": "https://github.com/search?q={0}&type=repositories"
+    },
+    {
+      "Name": "Docker Hub",
+      "cmdName": "doc",
+      "url": "https://hub.docker.com/search?q={0}"
+    },
+    {
+      "Name": "YouTube",
+      "cmdName": "yt",
+      "url": "https://www.youtube.com/results?search_query={0}&source=web"
+    },
+    {
+      "Name": "Bing",
+      "cmdName": "bing",
+      "url": "https://www.bing.com/search?q={0}"
+    },
+    {
+      "Name": "Brave Search",
+      "cmdName": "br",
+      "url": "https://search.brave.com/?q={0}"
+    },
+    {
+      "Name": "Qwant",
+      "cmdName": "qwant",
+      "url": "hhttps://www.qwant.com/?q={0}"
+    },
+    {
+      "Name": "StartPage",
+      "cmdName": "sp",
+      "url": "https://www.startpage.com/sp/search?query={0}&cat=web&pl=opensearch&language=english"
+    },
+    {
+      "Name": "LinkedIn",
+      "cmdName": "ln",
+      "url": "//www.linkedin.com/search/results/all/?keywords={0}&cat=web&pl=opensearch&language=english"
+    },
+    {
+      "Name": "crate.io",
+      "cmdName": "crate",
+      "url": "https://crates.io/search?q={0}"
+    }
+  ]
+}

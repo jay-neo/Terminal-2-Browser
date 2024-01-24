@@ -1,0 +1,44 @@
+{
+  "DefaultBrowser": [
+    {
+      "Path": ""
+    }
+  ],
+  "UserBrowserList": [
+    {
+      "Name": "🌏 MS Edge",
+      "WindowsName": "msedge",
+      "Path": "",
+      "IncognitoArgument": "-inprivate ",
+      "ProfileArgument": "--profile-directory="
+    },
+    {
+      "Name": "🌐 Chrome",
+      "WindowsName": "chrome",
+      "Path": "",
+      "IncognitoArgument": "--incognito ",
+      "ProfileArgument": "--user-data-dir="
+    },
+    {
+      "Name": "🦊 FireFox",
+      "WindowsName": "firefox",
+      "Path": "",
+      "IncognitoArgument": "-inprivate ",
+      "ProfileArgument": "--profile "
+    },
+    {
+      "Name": "🦁 Brave",
+      "WindowsName": "brave",
+      "Path": "",
+      "IncognitoArgument": "--incognito ",
+      "ProfileArgument": "--profile-directory="
+    },
+    {
+      "Name": "🐥 DuckDuckGo",
+      "WindowsName": "DuckDuckGo",
+      "Path": "",
+      "IncognitoArgument": " ",
+      "ProfileArgument": ""
+    }
+  ]
+}
