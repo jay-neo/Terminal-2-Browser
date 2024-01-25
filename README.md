@@ -1,34 +1,27 @@
 <div align="center"><h1>Terminal-2-Browser</h1></div>
 
 
-## Installation
 
-### For Windows
-
-Prerequisite: [`pwsh`](https://apps.microsoft.com/detail/9MZ1SNWT0N5D)
-
-#### Step 1
-
-Clone the repo in your local machine
+### Prerequisite 
+1. PowerShell Core - [`pwsh`](https://apps.microsoft.com/detail/9MZ1SNWT0N5D)
 
 ```pwsh
-git clone $env:TEMP https://github.com/jay-neo/Terminal-2-Browser.git
+winget install --id Microsoft.Powershell --source winget --silent
 ```
 
-#### Step 2
+2. Set the PowerShell execution policy "RemoteSigned"
 
-Entered into the repo
+Run PowerShell as Admin
 
 ```pwsh
-cd $env:TEMP/Terminal-2-Browser
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
-#### Step 3
-
-From **pwsh**
+### Installation
 
 ```pwsh
+git clone https://github.com/jay-neo/Terminal-2-Browser.git $env:TEMP\Terminal-2-Browser
+cd $env:TEMP\Terminal-2-Browser
 pwsh install.ps1
-```
 
-From Windows PowerShell : `& (Join-Path (Get-Location) "install.ps1")`
+```

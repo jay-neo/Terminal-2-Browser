@@ -1,7 +1,12 @@
 if (-not (Get-Command pwsh.exe -ErrorAction SilentlyContinue)) {
     winget install --id Microsoft.Powershell --source winget --silent
+    Start-Process powershell -Verb RunAs -ArgumentList 'Set-ExecutionPolicy RemoteSigned -Scope CurrentUser'
 }
 
+
+if ($(Get-ExecutionPolicy) -ne "RemoteSigned") {
+    Start-Process powershell -Verb RunAs -ArgumentList "Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force"
+}
 
 
 
@@ -55,11 +60,10 @@ echo "`t`t## |  ## |## |  ## |## \#### |##  __|   "
 echo "`t`t## |  ## |## |  ## |## |\### |## |      "
 echo "`t`t#######  | ######  |## | \## |########\ "
 echo "`t`t\_______/  \______/ \__|  \__|\________|"
-echo "`n"
 
 
 if ($PSVersionTable.PSEdition -eq 'Desktop') {
     powershell -nolog
 } elseif ($PSVersionTable.PSEdition -eq 'Core') {
-    pwsh -nolog
+    pwsh -Command {t2 'Hello World' -config}
 }

@@ -1,6 +1,7 @@
 
 function Terminal2BrowserErrorType1 {
-    Write-Host "    To fix, use '" -NoNewline -ForegroundColor Yellow
+    Write-Host "$(relativePosition 73)" -n
+    Write-Host "To fix, use '" -NoNewline -ForegroundColor Yellow
     Write-Host "-config" -NoNewline -ForegroundColor Cyan
     Write-Host "' flag. If that doesn't work, then use '" -NoNewline -ForegroundColor Yellow
     Write-Host "-reset" -NoNewline -ForegroundColor Red
@@ -27,7 +28,7 @@ function t2 {
             "-b" {
                 $b = $true
                 $itr2 = $itr + 1
-                if (($itr2 -lt $args.Count) -and (($args[$itr2] -ne "-s") -and ($args[$itr2] -ne "-p"))) {
+                if (($itr2 -lt $args.Count) -and (($args[$itr2] -ne "-s") -and ($args[$itr2] -ne "-p") -and ($args[$itr2] -ne "-config"))) {
                     $browserName = $args[$itr2]
                     $itr++
                 }
@@ -35,7 +36,7 @@ function t2 {
             "-s" {
                 $s = $true
                 $itr2 = $itr + 1
-                if (($itr2 -lt $args.Count) -and (($args[$itr2] -ne "-b") -and ($args[$itr2] -ne "-p"))) {
+                if (($itr2 -lt $args.Count) -and (($args[$itr2] -ne "-b") -and ($args[$itr2] -ne "-p") -and ($args[$itr2] -ne "-config"))) {
                     $searchEngineName = $args[$itr2]
                     $itr++
                 }
@@ -43,17 +44,26 @@ function t2 {
             "-p" {
                 $p = $true
                 $itr2 = $itr + 1
-                if (($itr2 -lt $args.Count) -and (($args[$itr2] -ne "-s") -and ($args[$itr2] -ne "-b"))) {
+                if (($itr2 -lt $args.Count) -and (($args[$itr2] -ne "-s") -and ($args[$itr2] -ne "-b") -and ($args[$itr2] -ne "-config"))) {
                     $profileName = $args[$itr2]
                     $itr++
                 }
             }
             "-config" {
-                Import-Module (Join-Path $PSScriptRoot "SetupConfig.ps1") -Force
+                Import-Module (Join-Path $PSScriptRoot "SetupConfig.psm1") -Force
                 Terminal2BrowserConfigurationOfBrowserList
             }
         }
     }
+
+    $neoPath = Join-Path $PSScriptRoot "neoLibrary.psm1"
+    if (-not(Test-Path $neoPath)) {
+        Write-Host "`n`t'" -n -f Red
+        Write-Host "$neoPath" -n -f Yellow
+        Write-Host "' file not found! 😲`n" -f Red
+        return
+    }
+    Import-Module $neoPath -Force
 
 
     ########################################## Debug
@@ -67,7 +77,7 @@ function t2 {
 
     ################################ Browser Selection #########################################
 
-    $jsonFilePath = Join-Path -Path $PSScriptRoot -ChildPath './User/BrowserList.json'
+    $jsonFilePath = Join-Path -Path $PSScriptRoot -ChildPath 'User/BrowserList.json'
     $jsonContent = Get-Content -Path $jsonFilePath -Raw
     $jsonObject = $jsonContent | ConvertFrom-Json
     $foundBrowser = $null
@@ -81,25 +91,27 @@ function t2 {
 
     if (-not($b)) {
         if ($jsonObject.DefaultBrowser.Path -eq "") {
-            Write-Host "`n 💀 Default browser not found!!`n" -ForegroundColor Red
+            $errMsg = "💀 Default browser not found!!"
+            Write-Host "`n$(relativePosition $($errMsg.Length))$errMsg" -f Red
             Terminal2BrowserErrorType1
             return
         }
         $foundBrowser = $jsonObject.DefaultBrowser[0]
     } elseif ($b -and ($browserName -eq "")) {
-        Import-Module (Join-Path $PSScriptRoot "Utility.psm1") -Force
-        $browserChoice = userChoice $browserList "Browser Preference"
+        $browserChoice = neoChoice $browserList "Browser Preference"
 
         $foundBrowser = $jsonObject.UserBrowserList | Where-Object { $_.Name -eq $browserChoice }
         if ($foundBrowser -eq $null) {
-            Write-Host "`n 💀 Error: Browser is not recognized!!`n" -ForegroundColor Red
+            $errMsg = "💀 Browser is not recognized!!"
+            Write-Host "`n$(relativePosition $($errMsg.Length))$errMsg" -f Red
             Terminal2BrowserErrorType1
             return
         }
     } elseif ($browserName -ne "") {
         $foundBrowser = $jsonObject.UserBrowserList | Where-Object { $_.WindowsName -eq $browserName }
         if ($foundBrowser -eq $null) {
-            Write-Host "`n 💀 Invalid browser name cannot be recognized!!`n" -ForegroundColor Red
+            $errMsg = "💀 Invalid browser name cannot be recognized!!"
+            Write-Host "`n$(relativePosition $($errMsg.Length))$errMsg`n" -f Red
             return
         }
     }
@@ -125,8 +137,8 @@ function t2 {
     #################### For URL
 
     if ($searchString -match '^(https?://|www\.).*$') {
-        Write-Host "`n       $($browserList[$browserChoice])" -n -ForegroundColor DarkCyan
-        Write-Host " 🔎 " -n -ForegroundColor Yellow
+        Write-Host "`n       $($foundBrowser.Name)" -n -ForegroundColor Green
+        Write-Host " > " -n -ForegroundColor Yellow
         Write-Host "$searchString`n" -ForegroundColor Cyan
         Start-Process $browserPath $searchString
         return
@@ -141,7 +153,7 @@ function t2 {
 
     ##################################### Search Engine Selection ###################################
 
-    $jsonFilePath = Join-Path -Path $PSScriptRoot -ChildPath './User/SearchEngineList.json'
+    $jsonFilePath = Join-Path -Path $PSScriptRoot -ChildPath 'User/SearchEngineList.json'
     $jsonContent = Get-Content -Path $jsonFilePath -Raw
     $jsonObject = $jsonContent | ConvertFrom-Json
     $foundSearchEngine = $null
@@ -157,19 +169,20 @@ function t2 {
         try {
             $foundSearchEngine = $jsonObject.DefaultSearchEngine[0]
         } catch {
-             Write-Host "`n 💀 Default search engine not found!!" -ForegroundColor Red
-             Terminal2BrowserErrorType1
-             # Write-Host "    $_`n" -ForegroundColor Yellow
-             return
+            $errMsg = "💀 Default search engine not found!!"
+            Write-Host "`n$(relativePosition $($errMsg.Length))$errMsg" -f Red
+            Terminal2BrowserErrorType1
+            # Write-Host "    $_`n" -ForegroundColor Yellow
+            return
         }
     } elseif ($s -and ($searchEngineName -eq "")) {
-        Import-Module (Join-Path $PSScriptRoot "Utility.psm1") -Force
-        $searchEngineChoice = userChoice $searchEngineList "Search Engine Preference"
+        $searchEngineChoice = neoChoice $searchEngineList "Search Engine Preference"
 
         $foundSearchEngine = $jsonObject.UserSearchEngineList | Where-Object { $_.Name -eq $searchEngineChoice }
 
         if ($foundSearchEngine -eq $null) {
-            Write-Host "`n 💀 Error: Search engine is not recognized!!" -ForegroundColor Red
+            $errMsg = "💀 Error: Search engine is not recognized!!"
+            Write-Host "`n$(relativePosition $($errMsg.Length))$errMsg" -f Red
             Terminal2BrowserErrorType1
             return
         }
@@ -177,7 +190,8 @@ function t2 {
     } elseif ($searchEngineName -ne "") {
         $foundSearchEngine = $jsonObject.UserSearchEngineList | Where-Object { $_.cmdName -eq $searchEngineName }
         if ($foundSearchEngine -eq $null) {
-            Write-Host "`n 💀 Invalid search engine name cannot be recognized!!`n" -ForegroundColor Red
+            $errMsg = "💀 Invalid search engine name cannot be recognized!!"
+            Write-Host "`n$(relativePosition $($errMsg.Length))$errMsg`n" -f Red
             return
         }
     }
@@ -189,9 +203,10 @@ function t2 {
 
     ############################### Final Execution ############################################### 
 
-    Write-Host "`n       $($foundBrowser.Name)" -n -ForegroundColor DarkCyan
+    $t = $($foundBrowser.Name).Length + ($foundSearchEngine.Name).Length + $searchString.Length + 6
+    Write-Host "`n$(relativePosition $t)$($foundBrowser.Name)" -n -ForegroundColor Green
     Write-Host " > " -n -ForegroundColor Yellow
-    Write-Host "$($foundSearchEngine.Name)" -n -ForegroundColor Magenta
+    Write-Host "$($foundSearchEngine.Name)" -n -ForegroundColor Blue
     Write-Host " > " -n -ForegroundColor Yellow
     Write-Host "$searchString`n" -ForegroundColor Cyan
     
