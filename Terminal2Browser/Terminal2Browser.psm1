@@ -137,7 +137,8 @@ function t2 {
     #################### For URL
 
     if ($searchString -match '^(https?://|www\.).*$') {
-        Write-Host "`n       $($foundBrowser.Name)" -n -ForegroundColor Green
+        $t = $($foundBrowser.Name).Length + $searchString.Length + 6
+        Write-Host "`n$(relativePosition $t)$($foundBrowser.Name)" -n -ForegroundColor Green
         Write-Host " > " -n -ForegroundColor Yellow
         Write-Host "$searchString`n" -ForegroundColor Cyan
         Start-Process $browserPath $searchString
