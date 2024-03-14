@@ -24,7 +24,7 @@
     },
     {
       "Name": "Docker Hub",
-      "cmdName": "doc",
+      "cmdName": "docker",
       "url": "https://hub.docker.com/search?q={0}"
     },
     {
@@ -58,7 +58,7 @@
       "url": "//www.linkedin.com/search/results/all/?keywords={0}&cat=web&pl=opensearch&language=english"
     },
     {
-      "Name": "crate.io",
+      "Name": "crates.io",
       "cmdName": "crate",
       "url": "https://crates.io/search?q={0}"
     }
